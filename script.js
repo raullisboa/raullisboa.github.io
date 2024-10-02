@@ -77,7 +77,14 @@ window.onload = function(){
 // Função para deletar Lembretes
 function deletarLembrete(li) {
   li.parentElement.remove();
-  li.localStorage.removeItem();
+
+  let tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+
+  let lembreteTexto = li.parentElement.textContent.trim();
+
+  tarefas = tarefas.filter(tarefa => tarefa.lembrete !== lembreteTexto);
+
+  localStorage.setItem('tarefas', JSON.stringify(tarefas));
 }
 
 // Função para adicionar um item ao pressionar a tecla Enter
