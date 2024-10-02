@@ -65,7 +65,7 @@ function carregarLembretes(){
 
   tarefas.forEach(function(tarefa) {
     let criarLi = document.createElement("li");
-    criarLi.innerHTML = `${tarefa.lembrete} <img onclick="deletarLembrete(this)" src="../assets/x.png" width="15px" height="15px">`;
+    criarLi.innerHTML = `${tarefa.lembrete} <img onclick="deletarLembrete(this)" src="./x.png" width="15px" height="15px">`;
     document.getElementById("listaDeLembretes").appendChild(criarLi);
   });
 }
