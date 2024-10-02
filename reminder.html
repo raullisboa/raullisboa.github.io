@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reminder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="entryarea">
+      <input type="text" required id="inputLembrete" placeholder="Adicione um Lembrete" onkeydown="adicionarComEnter(event)">
+      <div class="labelline">Adicione um Lembrete</div>
+    </div>
+
+    <div>
+      <button class="buttonAddTask">Adicionar</button>
+    </div>
+
+    <fieldset>
+      <ul id="listaDeLembretes">
+
+      </ul>
+    </fieldset>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
