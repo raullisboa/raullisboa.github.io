@@ -50,7 +50,7 @@ function adicionarLembrete(){
   }
 
   let criarLi = document.createElement("li")
-  criarLi.innerHTML = `${inputLembrete} <img onclick="deletarLembrete(this)" src="../assets/x.png" width="15px" height="15px">`
+  criarLi.innerHTML = `${inputLembrete} <img onclick="deletarLembrete(this)" src="./x.png" width="15px" height="15px">`
   document.getElementById("listaDeLembretes").appendChild(criarLi)
   document.getElementById("inputLembrete").value = ""
 
