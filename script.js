@@ -1,6 +1,10 @@
 // Função para formatar valores
 function formatarValor(valor) {
-  return valor.toFixed(2).replace(".", ",");
+  // Formata o valor para o padrão brasileiro (R$)
+  return valor.toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 // Adicionar valor nas listas e atualizar o resumo
@@ -23,7 +27,7 @@ function adicionarValor(elementId, inputId) {
 
     // Cria a imagem "X"
     const img = document.createElement("img");
-    img.src = "x.png"; // Caminho para a imagem
+    img.src = "assets/x.png"; // Caminho para a imagem
     img.alt = "Remover";
     img.classList.add("remove-icon");
 
@@ -153,42 +157,28 @@ function salvarDados() {
   if (dataSelecionada) {
     const dados = {
       nomeUsuario,
-      dinheiro:
-        parseFloat(
-          document.getElementById("dinheiro").value.replace(",", ".")
-        ) || "",
-      moedasC:
-        parseFloat(
-          document.getElementById("moedasC").value.replace(",", ".")
-        ) || "",
-      moedasB:
-        parseFloat(
-          document.getElementById("moedasB").value.replace(",", ".")
-        ) || "",
-      moedasPagar:
-        parseFloat(
-          document.getElementById("moedasPagar").value.replace(",", ".")
-        ) || "",
-      valorPago:
-        parseFloat(
-          document.getElementById("valorPago").value.replace(",", ".")
-        ) || "",
+      dinheiro: converterParaFloat(document.getElementById("dinheiro").value),
+      moedasC: converterParaFloat(document.getElementById("moedasC").value),
+      moedasB: converterParaFloat(document.getElementById("moedasB").value),
+      moedasPagar: converterParaFloat(
+        document.getElementById("moedasPagar").value
+      ),
+      valorPago: converterParaFloat(document.getElementById("valorPago").value),
       cartao: Array.from(document.querySelectorAll("#cartao li")).map((li) =>
-        parseFloat(li.textContent.replace(",", "."))
+        converterParaFloat(li.textContent)
       ),
       pix: Array.from(document.querySelectorAll("#pix li")).map((li) =>
-        parseFloat(li.textContent.replace(",", "."))
+        converterParaFloat(li.textContent)
       ),
       vale: Array.from(document.querySelectorAll("#vale li")).map((li) =>
-        parseFloat(li.textContent.replace(",", "."))
+        converterParaFloat(li.textContent)
       ),
       resgate: Array.from(document.querySelectorAll("#resgate li")).map((li) =>
-        parseFloat(li.textContent.replace(",", "."))
+        converterParaFloat(li.textContent)
       ),
-      suprimento:
-        parseFloat(
-          document.getElementById("suprimento").value.replace(",", ".")
-        ) || "",
+      suprimento: converterParaFloat(
+        document.getElementById("suprimento").value
+      ),
       obs: document.getElementById("obs").value,
     };
 
@@ -197,6 +187,12 @@ function salvarDados() {
   } else {
     alert("Por favor, selecione uma data.");
   }
+}
+
+// Função para converter valores com formato brasileiro para float
+function converterParaFloat(valor) {
+  // Remove o ponto (separador de milhar) e troca a vírgula por ponto (separador decimal)
+  return parseFloat(valor.replace(/\./g, "").replace(",", ".")) || 0;
 }
 
 // Carregar dados do localStorage
@@ -210,24 +206,24 @@ function carregarDados() {
       document.getElementById("nomeUsuario").value = dadosSalvos.nomeUsuario;
 
       // Converter os valores de volta para números antes de definir nos inputs
-      document.getElementById("dinheiro").value = dadosSalvos.dinheiro
-        .toString()
-        .replace(".", ",");
-      document.getElementById("moedasC").value = dadosSalvos.moedasC
-        .toString()
-        .replace(".", ",");
-      document.getElementById("moedasB").value = dadosSalvos.moedasB
-        .toString()
-        .replace(".", ",");
-      document.getElementById("moedasPagar").value = dadosSalvos.moedasPagar
-        .toString()
-        .replace(".", ",");
-      document.getElementById("valorPago").value = dadosSalvos.valorPago
-        .toString()
-        .replace(".", ",");
-      document.getElementById("suprimento").value = dadosSalvos.suprimento
-        .toString()
-        .replace(".", ",");
+      document.getElementById("dinheiro").value = formatarValor(
+        dadosSalvos.dinheiro
+      );
+      document.getElementById("moedasC").value = formatarValor(
+        dadosSalvos.moedasC
+      );
+      document.getElementById("moedasB").value = formatarValor(
+        dadosSalvos.moedasB
+      );
+      document.getElementById("moedasPagar").value = formatarValor(
+        dadosSalvos.moedasPagar
+      );
+      document.getElementById("valorPago").value = formatarValor(
+        dadosSalvos.valorPago
+      );
+      document.getElementById("suprimento").value = formatarValor(
+        dadosSalvos.suprimento
+      );
       document.getElementById("obs").value = dadosSalvos.obs.toString();
 
       // Limpar as listas antes de carregar novos dados
@@ -241,7 +237,7 @@ function carregarDados() {
 
           // Cria a imagem "X"
           const img = document.createElement("img");
-          img.src = "x.png"; // Caminho para a imagem
+          img.src = "assets/x.png"; // Caminho para a imagem
           img.alt = "Remover";
           img.classList.add("remove-icon");
 
@@ -426,7 +422,13 @@ function salvarDadosCSV() {
         .replace(",", ".")
     ) || 0;
   const tSuprimento =
-    parseFloat(document.getElementById("suprimento").value) || 0;
+    parseFloat(
+      document
+        .getElementById("suprimento")
+        .value.trim()
+        .replace(/\./g, "")
+        .replace(",", ".")
+    ) || 0;
 
   // Substitui quebras de linha por espaço em branco
   const obs =
@@ -480,20 +482,31 @@ function carregarMoedasAnterior() {
   const campoData = document.getElementById("data").value;
   const dataAtual = new Date(campoData);
 
-  // Subtrai um dia para pegar o dia anterior
-  const diaAnterior = new Date(dataAtual);
-  diaAnterior.setDate(diaAnterior.getDate() - 1);
+  // Converte a dataAtual para o formato YYYY-MM-DD para comparação
+  const dataAtualFormatada = dataAtual.toISOString().split("T")[0];
 
-  // Converte a data anterior para o formato YYYY-MM-DD
-  const diaAnteriorFormatado = diaAnterior.toISOString().split("T")[0];
+  // Obtém todas as chaves do localStorage
+  const chaves = Object.keys(localStorage);
 
-  // Verifica se há dados para o dia anterior no localStorage
-  const dadosAnteriores = JSON.parse(
-    localStorage.getItem(diaAnteriorFormatado)
-  );
+  // Filtra as chaves para obter apenas as que são datas
+  const datasSalvas = chaves.filter((chave) => {
+    const dataChave = new Date(chave);
+    return !isNaN(dataChave.getTime()) && dataChave < dataAtual;
+  });
+
+  // Se não houver datas salvas anteriores, sai da função
+  if (datasSalvas.length === 0) {
+    document.getElementById("moedasPagar").value = "";
+    return;
+  }
+
+  // Ordena as datas salvas para encontrar a última
+  const ultimaData = datasSalvas.sort((a, b) => new Date(b) - new Date(a))[0];
+
+  // Obtém os dados da última data
+  const dadosAnteriores = JSON.parse(localStorage.getItem(ultimaData));
 
   if (dadosAnteriores) {
-    // Se existir dados, busca os valores de moedasC e moedasB
     const moedasC = parseFloat(dadosAnteriores.moedasC) || 0; // Converte para número, garantindo que não seja NaN
     const moedasB = parseFloat(dadosAnteriores.moedasB) || 0; // Converte para número, garantindo que não seja NaN
 
@@ -505,8 +518,8 @@ function carregarMoedasAnterior() {
       .toString()
       .replace(".", ",");
   } else {
-    // Se não houver dados para o dia anterior, deixa o campo vazio ou com valor padrão
     document.getElementById("moedasPagar").value = "";
   }
+
   atualizarResumo();
 }

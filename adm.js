@@ -36,7 +36,9 @@ let totalGeral = 0;
 function lerArquivosCSV() {
   const fileInput = document.getElementById("fileInput");
   const files = fileInput.files;
-  const tabelaCorpo = document.getElementById("tabelaResultados").getElementsByTagName("tbody")[0];
+  const tabelaCorpo = document
+    .getElementById("tabelaResultados")
+    .getElementsByTagName("tbody")[0];
 
   // Array para armazenar todas as linhas dos arquivos CSV
   let todasAsLinhas = [];
@@ -65,15 +67,33 @@ function lerArquivosCSV() {
         if (dados.length === 12) {
           todasAsLinhas.push(dados);
 
-          const dinheiroTotal = parseFloat(dados[2].replace(",", "."));
-          const moedasTotal = parseFloat(dados[3].replace(",", "."));
-          const trocoTotal = parseFloat(dados[4].replace(",", "."));
-          const cartaoTotal = parseFloat(dados[5].replace(",", "."));
-          const valeTotal = parseFloat(dados[6].replace(",", "."));
-          const pixTotal = parseFloat(dados[7].replace(",", "."));
-          const resgateTotal = parseFloat(dados[8].replace(",", "."));
-          const suprimentoTotal = parseFloat(dados[9].replace(",", "."));
-          const valorTotal = parseFloat(dados[11].replace(",", "."));
+          const dinheiroTotal = parseFloat(
+            dados[2].replace(/\./g, "").replace(",", ".")
+          );
+          const moedasTotal = parseFloat(
+            dados[3].replace(/\./g, "").replace(",", ".")
+          );
+          const trocoTotal = parseFloat(
+            dados[4].replace(/\./g, "").replace(",", ".")
+          );
+          const cartaoTotal = parseFloat(
+            dados[5].replace(/\./g, "").replace(",", ".")
+          );
+          const valeTotal = parseFloat(
+            dados[6].replace(/\./g, "").replace(",", ".")
+          );
+          const pixTotal = parseFloat(
+            dados[7].replace(/\./g, "").replace(",", ".")
+          );
+          const resgateTotal = parseFloat(
+            dados[8].replace(/\./g, "").replace(",", ".")
+          );
+          const suprimentoTotal = parseFloat(
+            dados[9].replace(/\./g, "").replace(",", ".")
+          );
+          const valorTotal = parseFloat(
+            dados[11].replace(/\./g, "").replace(",", ".")
+          );
 
           if (!isNaN(dinheiroTotal)) totalDinheiro += dinheiroTotal;
           if (!isNaN(moedasTotal)) totalMoedas += moedasTotal;
@@ -105,9 +125,14 @@ function lerArquivosCSV() {
           // Verificar se o campo atual é a data (índice 1) e aplicar formatação
           if (k === 1) {
             novaCelula.textContent = formatarDataBrasileira(dados[k]);
-          } else if (k >= 2 && k <= 9) { // Índices dos campos de valores monetários
-            novaCelula.textContent = formatarValorParaBRL(parseFloat(dados[k].replace(",", ".")));
-          } else if (k === 10) { // Campo de "Obs" (observações), tratar quebras de linha
+          } else if (k >= 2 && k <= 9) {
+            // Índices dos campos de valores monetários
+            const valorFormatado = formatarValorParaBRL(
+              parseFloat(dados[k].replace(/\./g, "").replace(",", "."))
+            );
+            novaCelula.textContent = valorFormatado;
+          } else if (k === 10) {
+            // Campo de "Obs" (observações), tratar quebras de linha
             novaCelula.innerHTML = dados[k].replace(/\n/g, "<br>"); // Substituir \n por <br>
           } else {
             novaCelula.textContent = dados[k];
@@ -116,16 +141,24 @@ function lerArquivosCSV() {
       });
 
       // Exibir os totais formatados após o processamento
-      document.getElementById("totalDinheiro").textContent = formatarValorParaBRL(totalDinheiro);
-      document.getElementById("totalMoedas").textContent = formatarValorParaBRL(totalMoedas);
-      document.getElementById("totalTroco").textContent = formatarValorParaBRL(totalTroco);
-      document.getElementById("totalCartao").textContent = formatarValorParaBRL(totalCartao);
-      document.getElementById("totalVale").textContent = formatarValorParaBRL(totalVale);
-      document.getElementById("totalPix").textContent = formatarValorParaBRL(totalPix);
-      document.getElementById("totalResgate").textContent = formatarValorParaBRL(totalResgate);
-      document.getElementById("totalSuprimento").textContent = formatarValorParaBRL(totalSuprimento);
-      document.getElementById("totalGeral").textContent = formatarValorParaBRL(totalGeral);
-
+      document.getElementById("totalDinheiro").textContent =
+        formatarValorParaBRL(totalDinheiro);
+      document.getElementById("totalMoedas").textContent =
+        formatarValorParaBRL(totalMoedas);
+      document.getElementById("totalTroco").textContent =
+        formatarValorParaBRL(totalTroco);
+      document.getElementById("totalCartao").textContent =
+        formatarValorParaBRL(totalCartao);
+      document.getElementById("totalVale").textContent =
+        formatarValorParaBRL(totalVale);
+      document.getElementById("totalPix").textContent =
+        formatarValorParaBRL(totalPix);
+      document.getElementById("totalResgate").textContent =
+        formatarValorParaBRL(totalResgate);
+      document.getElementById("totalSuprimento").textContent =
+        formatarValorParaBRL(totalSuprimento);
+      document.getElementById("totalGeral").textContent =
+        formatarValorParaBRL(totalGeral);
     };
 
     reader.readAsText(file);

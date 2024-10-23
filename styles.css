@@ -187,7 +187,7 @@ ul li {
   margin-right: 3px;
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .flex-container {
     flex-direction: column;
   }
@@ -197,4 +197,4 @@ ul li {
   .coluna3 {
     width: 100%;
   }
-}
+} */
